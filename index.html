@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Node.js Events and Timers</title>
+<style>
+body{font-family:Arial;background:#0f172a;color:#fff;margin:0;padding:20px}
+h1{text-align:center;margin-bottom:30px}
+.section{margin-bottom:60px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.card{background:#1e293b;padding:20px;border-radius:14px}
+.box{width:100px;height:100px;background:#38bdf8;margin:10px auto;border-radius:10px;transition:0.3s}
+button{padding:8px 12px;border:none;border-radius:6px;cursor:pointer;margin-top:10px}
+.code{display:none;background:#000;color:#0f0;padding:10px;margin-top:10px;font-size:12px}
+
+/* effects */
+.enlarge{transform:scale(1.5)}
+.rotate{transform:rotate(180deg)}
+.active{background:#facc15 !important}
+.skew{transform:skew(20deg)}
+</style>
+</head>
+<body>
+
+<h1>🚀 Node.js Events and Timers</h1>
+
+<!-- EVENTS SECTION -->
+<div class="section">
+<h2>🎯 Events & Event Listeners</h2>
+<div class="grid">
+
+<!-- hover enlarge -->
+<div class="card">
+<p>Hover → Enlarge</p>
+<div class="box" id="hoverBox"></div>
+<button onclick="toggleCode('codeHover')">View Code</button>
+<div class="code" id="codeHover">
+hoverBox.addEventListener('mouseenter',()=>{
+  hoverBox.classList.add('enlarge');
+});
+hoverBox.addEventListener('mouseleave',()=>{
+  hoverBox.classList.remove('enlarge');
+});
+</div>
+</div>
+
+<!-- click rotate -->
+<div class="card">
+<p>Click → Rotate</p>
+<div class="box" id="clickBox"></div>
+<button onclick="toggleCode('codeClick')">View Code</button>
+<div class="code" id="codeClick">
+clickBox.addEventListener('click',()=>{
+  clickBox.classList.toggle('rotate');
+});
+</div>
+</div>
+
+<!-- double click color -->
+<div class="card">
+<p>Double Click → Color Change</p>
+<div class="box" id="dblBox"></div>
+<button onclick="toggleCode('codeDbl')">View Code</button>
+<div class="code" id="codeDbl">
+dblBox.addEventListener('dblclick',()=>{
+  dblBox.style.background = dblBox.style.background==='red' ? '#38bdf8':'red';
+});
+</div>
+</div>
+
+<!-- activate each other -->
+<div class="card">
+<p>Click Box A → Activates B (and vice versa)</p>
+<div class="box" id="boxA"></div>
+<div class="box" id="boxB"></div>
+<button onclick="toggleCode('codeCross')">View Code</button>
+<div class="code" id="codeCross">
+boxA.addEventListener('click',()=>{
+  boxB.classList.toggle('active');
+});
+
+boxB.addEventListener('click',()=>{
+  boxA.classList.toggle('active');
+});
+</div>
+</div>
+
+<!-- keypress skew -->
+<div class="card">
+<p>Press any key → Skew</p>
+<div class="box" id="keyBox"></div>
+<button onclick="toggleCode('codeKey')">View Code</button>
+<div class="code" id="codeKey">
+document.addEventListener('keydown',()=>{
+  keyBox.classList.add('skew');
+  setTimeout(()=>{
+    keyBox.classList.remove('skew');
+  },300);
+});
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- TIMERS SECTION -->
+<div class="section">
+<h2>⏱ Timers</h2>
+<div class="grid">
+
+<!-- setTimeout -->
+<div class="card">
+<p>Hover → stays enlarged 5s after leaving</p>
+<div class="box" id="timeoutBox"></div>
+<button onclick="toggleCode('codeTimeout')">View Code</button>
+<div class="code" id="codeTimeout">
+timeoutBox.addEventListener('mouseenter',()=>{
+  clearTimeout(timer);
+  timeoutBox.classList.add('enlarge');
+});
+
+timeoutBox.addEventListener('mouseleave',()=>{
+  timer=setTimeout(()=>{
+    timeoutBox.classList.remove('enlarge');
+  },5000);
+});
+</div>
+</div>
+
+<!-- setInterval -->
+<div class="card">
+<p>Hover → heartbeat animation</p>
+<div class="box" id="intervalBox"></div>
+<button onclick="toggleCode('codeInterval')">View Code</button>
+<div class="code" id="codeInterval">
+intervalBox.addEventListener('mouseenter',()=>{
+  interval=setInterval(()=>{
+    intervalBox.classList.toggle('enlarge');
+  },500);
+});
+
+intervalBox.addEventListener('mouseleave',()=>{
+  clearInterval(interval);
+  intervalBox.classList.remove('enlarge');
+});
+</div>
+</div>
+
+</div>
+</div>
+
+<script>
+
+// EVENTS
+const hoverBox=document.getElementById('hoverBox');
+const clickBox=document.getElementById('clickBox');
+const dblBox=document.getElementById('dblBox');
+const boxA=document.getElementById('boxA');
+const boxB=document.getElementById('boxB');
+const keyBox=document.getElementById('keyBox');
+
+hoverBox.addEventListener('mouseenter',()=>hoverBox.classList.add('enlarge'));
+hoverBox.addEventListener('mouseleave',()=>hoverBox.classList.remove('enlarge'));
+
+clickBox.addEventListener('click',()=>clickBox.classList.toggle('rotate'));
+
+dblBox.addEventListener('dblclick',()=>{
+ dblBox.style.background = dblBox.style.background==='red' ? '#38bdf8':'red';
+});
+
+boxA.addEventListener('click',()=>boxB.classList.toggle('active'));
+boxB.addEventListener('click',()=>boxA.classList.toggle('active'));
+
+// KEYPRESS EVENT
+document.addEventListener('keydown',()=>{
+ keyBox.classList.add('skew');
+ setTimeout(()=>keyBox.classList.remove('skew'),300);
+});
+
+// TIMERS
+const timeoutBox=document.getElementById('timeoutBox');
+let timer;
+
+timeoutBox.addEventListener('mouseenter',()=>{
+ clearTimeout(timer);
+ timeoutBox.classList.add('enlarge');
+});
+
+timeoutBox.addEventListener('mouseleave',()=>{
+ timer=setTimeout(()=>{
+  timeoutBox.classList.remove('enlarge');
+ },5000);
+});
+
+const intervalBox=document.getElementById('intervalBox');
+let interval;
+
+intervalBox.addEventListener('mouseenter',()=>{
+ interval=setInterval(()=>{
+  intervalBox.classList.toggle('enlarge');
+ },500);
+});
+
+intervalBox.addEventListener('mouseleave',()=>{
+ clearInterval(interval);
+ intervalBox.classList.remove('enlarge');
+});
+
+function toggleCode(id){
+ const el=document.getElementById(id);
+ el.style.display=el.style.display==='block'?'none':'block';
+}
+
+</script>
+
+</body>
+</html>
